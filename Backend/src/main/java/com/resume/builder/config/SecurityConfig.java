@@ -52,14 +52,14 @@ public class SecurityConfig {
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/",
+                                "/health",
                                 "/api/auth/register",
                                 "/api/auth/login",
                                 "/api/auth/verify-email",
                                 "/api/auth/upload-image",
                                 "/actuator/**",
                                 "/api/auth/resend-verification"
-
-
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
