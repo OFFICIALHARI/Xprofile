@@ -1,0 +1,39 @@
+# Root .gitignore for Resume Builder Project
+
+# Environment Variables - NEVER COMMIT THESE!
+.env
+.env.local
+.env.production
+*.env
+
+# IDE
+.vscode/
+.idea/
+*.iml
+*.iws
+*.ipr
+.DS_Store
+
+# OS Files
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build outputs (handled by sub-project gitignores)
+target/
+dist/
+build/
+node_modules/
+
+# Backup files
+*.bak
+*.backup
