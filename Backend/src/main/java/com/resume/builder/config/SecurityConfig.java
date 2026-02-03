@@ -49,30 +49,27 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // Authorization rules
+                // Authorization rules - permitAll() MUST be defined BEFORE anyRequest().authenticated()
                 .authorizeHttpRequests(auth -> auth
+                        // ✅ PUBLIC ENDPOINTS (health checks, auth, swagger)
                         .requestMatchers(
                                 "/",
                                 "/health",
-                                "/api/auth/register",
-                                "/api/auth/login",
-                                "/api/auth/verify-email",
-                                "/api/auth/upload-image",
                                 "/actuator/**",
-                                "/api/auth/resend-verification"
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/api/auth/**"
                         ).permitAll()
+                        // 🔐 EVERYTHING ELSE REQUIRES AUTH
                         .anyRequest().authenticated()
                 )
 
                 // Handle unauthorized access
                 .exceptionHandling(ex ->
-                        ex.authenticationEntryPoint(jwtAuthenticationEntryPoint))
+                        ex.authenticationEntryPoint(jwtAuthenticationEntryPoint));
 
-                // Add JWT filter before Spring's auth filter
-                .addFilterBefore(
-                        jwtAuthenticationFilter,
-                        UsernamePasswordAuthenticationFilter.class
-                );
+        // ⚠️ JWT FILTER AFTER AUTH RULES
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
