@@ -30,9 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        // ⚠️ SKIP JWT logic for health check endpoints
+        // ⚠️ FAST BYPASS for health check - MUST return immediately
+        if (request.getRequestURI().equals("/health")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        // Skip other public endpoints
         String path = request.getRequestURI();
-        if (path.equals("/") || path.equals("/health") || path.startsWith("/actuator")) {
+        if (path.equals("/") || path.startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;
         }
